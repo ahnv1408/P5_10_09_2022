@@ -18,9 +18,9 @@ const productId = extractionId.get("id");
 console.log(productId);
 
 //  Création variable qui requête l'API selon l'id
-let productAPI = "http://localhost:3000/api/products/";
-productAPI = productAPI + productId;
-console.log(productAPI);
+let productAPIId = 'http://localhost:3000/api/products/';
+productAPIId = productAPIId + productId;
+console.log(productAPIId);
 let productData = [];
 
 // Création variable produits
@@ -36,7 +36,7 @@ let allProducts = productImg + productId + productColor + productDescription + p
 console.log(productData);
 
 // Récupération des éléments à partir de l'API
-const fetchProducts = fetch(productAPI)
+const fetchProducts = fetch(productAPIId)
     .then((res) => res.json())
     .then((promise) => {   
             productData = promise;     
@@ -143,11 +143,12 @@ let elementQuantity = document.querySelector("#quantity").value;
 //     }
 
 // });
-
+// function addArticleToCart() {
 let addTocart = document.getElementById("addToCart");
 // console.log(JSON.parse(localStorage["item"]));
 
-addTocart.addEventListener("click", () => {
+addTocart.addEventListener("click", () => { 
+
     // Si on clique sur le bouton ajouter au panier, on récupère les données
     
     let listCart = JSON.parse(localStorage.getItem('productItems'));
@@ -157,57 +158,87 @@ addTocart.addEventListener("click", () => {
         quantity : productQuantity.value*1,
         color : productColor.value,
     }
+    console.log(listCart);
+    console.log(productItems);
 
     if(productColor.value == "" || productQuantity.value < 1) {
-        alert("Veuillez sélectionner une couleur ainsi qu'une quantité")     
+        alert("Veuillez sélectionner une couleur ainsi qu'une quantité");
+        document.location.reload();     
+
     }
     else {
-        // Si listCart (données du tableau récupéré dans le localstorage) est différente de null
-        if (listCart != null) {
-            // Parcourir tout le tableau
-            for(let i = 0; i<listCart.lenght; i++) {
-                //  Si mon id et ma couleur sont les mêmes que l'id et la couleur de listCart alors
-                if((productItems.id == listCart[i].id) && (productItems.color == listCart[i].color)){
-                    return listCart[i].quantity++;
-                    
-                    
-                    // listCart[i].quantity += productItems.quantity;
-                    
-                    
-                    // let foundProduct = listCart.find(p => p.id == productItems.id);
-                    // if(foundProduct != undefined) {
-                        // foundProduct.productItems.quantity += listCart[i].quantity;
-                        // foundProduct.productItem.quantity++;
-                        // if(foundProduct.productItems.quantity <= 0) {
-                        //     removeCart(foundProduct)
-                        // }
-                    // }
-                    //     else {
-                    //         productItems.quantity = 1
-                    //         listCart.push(productItems);
-                    //     }
-                    
-                //    productItems.quantity ++ listCart[i].quantity;
-                    // ajouter une quantité additionner productitems.quantité à listcart[i] qauntité
-                    }                
-            
-            }
-            // meme id mais pas meme couleur ajouter une ligne pour stocket productItem dans le localstorage(push et set item)
-            // Si pas pareil alors on push les éléments dans le panier 
-            listCart.push(productItems);
             localStorage.setItem('productItems',JSON.stringify(listCart));
-            alert("L'artcile a bien été ajouté à votre panier");
-            
-        }else {
-            // si on ajoute le premier article on déclare le listCart comme tableau
-            listCart = [];
-            listCart.push(productItems);
-            localStorage.setItem('productItems',JSON.stringify(listCart));        
+            alert("L'article a bien été ajouté à votre panier");
+            document.location.reload(); 
+            // Si listCart (données du tableau récupéré dans le localstorage) est différente de null
+            if (listCart) {
+                // Parcourir tout le tableau
+                for(let i = 0; i < listCart.length; i++) {
+                    //  Si mon id et ma couleur sont les mêmes que l'id et la couleur de listCart alors
+                    if((productItems.id === listCart[i].id) && (productItems.color === listCart[i].color)){
+                        console.log(listCart[i]);
+                        console.log(listCart[i].quantity);
+                         listCart[i].quantity += productItems.quantity;
+                         console.log('mettre a jour la quantité');
+                        //  listCart.push(productItems);
+                        localStorage.setItem('productItems',JSON.stringify(listCart));
+                        //  alert("L'article a bien été ajouté à votre panier");
+                        //  document.location.reload(); 
+                       
+                   
+                        // break;
+                    }
+                    else {          
+                        // Pas même id ni meme couleur
+                         
+                                     
+                        localStorage.setItem('productItems',JSON.stringify(listCart));  
+                        // listCart.push(productItems);
+                        console.log('pas meme id ni meme couleur');       
+                        alert("L'article a été ajouté à votre panier");    
+                        document.location.reload(); 
+                                    
+                        // productItems =  {id:"",quantity:0,color:""}
+                            
+               
+                        
+                    }         
+        
         }
-      
+        }
+        else {
+               // si on ajoute le premier article on déclare le listCart comme tableau
+               console.log('on a pas trouvé des articles dans le localStorage');
+               listCart = [];
+               listCart.push(productItems);
+               localStorage.setItem('productItems',JSON.stringify(listCart)); 
+            //    alert("L'article a bien été ajouté à votre panier");  
+               document.location.reload();
+
+              
+        
+    
+
+        }
+     
+
+    //  return (listCart = JSON.parse(localStorage.getItem('productItems')));
     }
-    return (listCart = JSON.parse(localStorage.getItem('productItems')));
+    
 });
+
+// let listCart = JSON.parse(localStorage.getItem('productItems'));
+// console.log(listCart);
+
+// let i = 0;
+
+// while (i < listCart.length) {
+//     console.log("test");
+//   i++;
+
+// console.log(i);
+// expected output: 3
+
 
     // if(listCart) {
         //     let valueCart = JSON.parse(listCart);
