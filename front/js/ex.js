@@ -38,3 +38,8 @@ if (listCart != null) {
 //         }
        
 //     }
+
+
+const productAPIId = 'http://localhost:3000/api/products/';
+//  let listCart = JSON.parse(localStorage.getItem('productItems'));
+
