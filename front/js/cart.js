@@ -36,133 +36,392 @@ const productAPI = 'http://localhost:3000/api/products/';
 let listCart = JSON.parse(localStorage.getItem('productItems'));
 console.log(listCart);
 console.log("test2");
-console.log(listCart.length);
 
-for(let i = 0; i < listCart.length; i++) {
-  
-  console.log("test1");
-    async function getProduct(i) {
-      console.log("test");
-      fetch(productAPI + listCart[i].id)
-      .then ((res) => res.json())
-      .then ((data) => {
-        let productData = data;    
-        console.log(productData);
-        if (listCart != null) {
-        let carthtml = document.getElementById("cart__items");
-        carthtml.innerHTML += `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
-        <div class="cart__item__img">
-          <img src="${productData.imageURL}" alt="Photographie d'un canapé">
-        </div>
-        <div class="cart__item__content">
-          <div class="cart__item__content__description">
-            <h2>${productData.name}</h2>
-            <p>${listCart[i].color}</p>
-            <p>${productData.price}€</p>
-          </div>
-          <div class="cart__item__content__settings">
-            <div class="cart__item__content__settings__quantity">
-              <p>${listCart[i].quantity}</p>
-              <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100">
-            </div>
-            <div class="cart__item__content__settings__delete">
-              <p class="deleteItem">Supprimer</p>
-            </div>
-          </div>
-        </div>
-      </article>`
+totalPce();   
 
- 
-      // Suppression article 
-      const buttonDelete = document.querySelector(".deleteItem");
-      buttonDelete.addEventListener("click", () => {    
-          // deleteProduct(listCart);  
-          delProduct(i);
-        })
-     }
-     else {
-      cartNull();
-     }
+// function deleteItemSelect() {  
+//   buttonDelete = document.getElementsByClassName('deleteItem');
+//   for(button in buttonDelete){
+
+//     // on pointe le parent hiérarchique article du lien supprimer
+//     // let remove = buttonDelete.closest(".deleteItem");
+//       button.addEventListener('click', () => {
+//         console.log(remove);
+//         let totalProductRemove = listCart.length;
+//         console.log(totalProductRemove);
+
+//         if(totalProductRemove == 1) {
+//           return (
+//             localStorage.removeItem("productItems"),
+//             console.log("removoe panier"),
+//             (location.href = "cart.html")
+//           );
+//         }else {
+//           let someProduct = [];
+//           someProduct = listCart.filter((i) => {
+//             if (
+//               button.productItems.id != listCart[i].id || button.productItems.color != listCart[i].color
+//             ) {
+//               return true;
+//             }
+//           });
+//           console.log(someProduct);
+//           localStorage.setItem("productItems",JSON.stringify(listCart));
+//           totalPce();
+//           totalQty();
+//           location.href = "cart.html";
+//       }
+//     });
+//   }
+// }
+// const buttonDelete = document.querySelectorAll('.deleteItem');
+// buttonDelete.addEventListener('click', () => {
+//   function deleteItemSelect(productItems) {
+//     const itemToDelete = listCart.findIndex(
+//       (product) => product.id === productItems.id && product.color === productItems.color)
+//     listCart.splice(itemToDelete, 1)
+//     localStorage.setItem("productItems", JSON.stringify(listCart));
+//   }
+//   deleteItemSelect(productItems);
+// });
+
+
+
+
+
+//     for(button in buttonDelete){
+//       console.log(buttonDelete[button]);
    
-    }
-  )}
-  getProduct(i);
-};
-
-// function deleteProduct(listCart) {
-//   const productToDelete = listCart.find(
-//    (productItems) => (productItems.id === listCart.id) && (productItems.color === listCart.color)
-//   )
-//   productItems.splice(productToDelete, 1)
-//   localStorage.setItem("productItems", JSON.stringify(listCart))
-// }
-
-delProduct = (i) =>{
-  //Récupérer le tableau
-  productData.splice(i, 1);
-  // vider le localstorage
-  localStorage.clear();
-  // Mettre à jour le locl storage avec le nouveau panier
-  localStorage.setItem('productItems', JSON.stringify(listCart));
-  window.location.reload();
-};
-
-// function delArticle(productItems) {
-//   let carthtml = document.getElementById("cart__items");
-//   carthtml.removechild(productItems);
-// }
-
-// function cartNull() {
-//   if (listCart === null) {
-//       totalPrice.innerText = 0;
-//       totalQuantity.innerText = 0;
-//       const newContent = document.createElement("h2");
-//       newContent.setAttribute("style", "text-align: center");
-//       newContent.textContent = "Panier vide";
-//       carthtml.appendChild(newContent);
+//       // on pointe le parent hiérarchique article du lien supprimer
+//       let remove = buttonDelete[button].closest(".deleteItem");
+//       // console.log(buttonDelete[button]);
+//       // console.log(remove);
+//       remove.addEventListener("click", () => {   
+//           let removeItem = remove.closest("article");
+//           console.log(remove.closest("article"));
+//           removeItem.remove();
+//           console.log(listCart[i]);
+//           listCart.splice(i,1);         
+//           console.log(remove);          
+//           // location.reload();
+//           alert("Ce produit va être supprimé de votre panier");
+//           localStorage.setItem("item",JSON.stringify(listCart));
+//           totalQty();
+//           totalPce();    
+//     });
 //   }
-//   // else {
-//   //     totalQty.innerText = cartList.map(item => parseInt(item.qty)).reduce((compteur, valeur) => compteur + valeur, 0);
-//   //     totalPrice.innerText = allArticlePrice.map(item => parseInt(item.total)).reduce((compteur, valeur) => compteur + valeur, 0);
-
-//   // }
-// };
-
-// function totalQuantity() {
-//   const totalQty = document.getElementById("totalQuantity");
-//   let total = 0;
-//   for(let i = 0; i < listCart.length; i++) {
-//     total += JSON.parse(listCart[i].quantity)
-//   }
-//   totalQty.textContent = total;
 // }
+  
+
+
+  for(let i = 0; i < listCart.length; i++)  {
+    fetch(productAPI + listCart[i].id)
+    .then((res) => res.json())
+    .then ((data) => {
+      console.log(data);
+      let productData = data;    
+      console.log(productData);
+      totalPce(); 
+      if (listCart != null){
+
+      let carthtml = document.getElementById("cart__items");
+      console.log(carthtml);
+     
+      carthtml.innerHTML += `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
+      <div class="cart__item__img">
+        <img src="${productData.imageUrl}" alt="Photographie d'un canapé">
+      </div>
+      <div class="cart__item__content">
+        <div class="cart__item__content__description">
+          <h2>${productData.name}</h2>
+          <p>${listCart[i].color}</p>
+          <p>${productData.price}€</p>
+        </div>
+        <div class="cart__item__content__settings">
+          <div class="cart__item__content__settings__quantity">
+            <p>${listCart[i].quantity}</p>
+            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100">
+          </div>
+          <div class="cart__item__content__settings__delete">
+            <p class="deleteItem">Supprimer</p>
+          </div>
+        </div>
+      </div>
+    </article>` 
+    // deleteItemSelect(productItems);
+
+
+   
+    // const buttonDelete = document.querySelector(`[data-id="${product._id}"][data-color="${product.color}"] .deleteItem`);
+    // buttonDelete.addEventListener("click", () => {
+
+    //   totalPce();
+    //   totalQty();
+    // });
+ 
+    }else {
+          const cartNull = document.createElement("h2");
+          cartNull.setAttribute("style", "text-align: center");
+          cartNull.textContent = "Panier vide";
+          carthtml.appendChild(cartNull);
+      }     
+    }  
+  )};
+
+
+              //  RECUPERATION DONNEES FORMULAIRE !!
+
+let firstName = document.getElementById('firstName');
+let lastName = document.getElementById('lastName');
+let address = document.getElementById('address');
+let city = document.getElementById('city');
+let email = document.getElementById('email');
+let commandeProducts = JSON.parse(localStorage.getItem('commande'));
+console.log(commandeProducts);
+
+let btncommande = document.getElementById('order');
+console.log(btncommande);
+
+btncommande.addEventListener('click', () => {
+  // Récupérer les données du formulaire
+  // Stocker les saisies dans le local storage
+  // let formCart = JSON.parse(localStorage.getItem('allForm'));
+  // console.log(formCart);
+  // formCart.push(allForm);
+  // localStorage.setItem('allForm',JSON.stringify(formCart));  
+  localStorage.setItem("firstName", firstName.value);
+  localStorage.setItem("lastName", lastName.value);
+  localStorage.setItem("address", address.value);
+  localStorage.setItem("city", city.value);
+  localStorage.setItem("email", email.value);
+  location.href = "confirmation.html"; 
+
+  fetch('http://localhost:3000/api/products/order', {
+    method: "POST",
+    headers: {"Content-Type" : "application/json"},
+    body: JSON.stringify( 
+      {contact: {
+      firstName : firstName.value,
+      lastName : lastName.value,
+      address: address.value,
+      city : city.value,
+      email : email.value,
+    },
+    // products: listCart.map(product => product._id)
+  }),
+  })
+  .then((res) => res.json())
+  .then((data) => {
+    let orderId = data.orderId;
+    console.log(responseServeur);
+    // localStorage.clear('cart');
+    window.location.href = "confirmation.html" + "?orderId" + orderId
+    // document.location= `confirmation.html?id=${orderId}`
+
+  }); 
+});
+
+function pushIdInCart() {
+  const id = [];
+  for(let i = 0; i < listCart.length; i++) {
+    id.push(listCart[i].id)
+  }
+  return id;
+}
+
+
+  // Récupération du formulaire
+//   let formulaire = document.getElementsByClassName('cart__order__form');
+//   console.log(formulaire);
+
+// for (const formu of formulaire) {
+//   formu.addEventListener('submit', () => {
+
+//   if (contact != null) {
+//     const commandeFinal = JSON.parse(localStorage.getItem('productItems'));
+//     let commandeId = [];    
+//     console.log(commandeFinal);
+//     console.log(commandeId);
+
+//     commandeFinal.forEach((commande) => {
+//       commandeId.push(commande.id);
+//     });
+
+    const data = {
+      contact: {
+        firstName : firstName.value,
+        lastName : lastName.value,
+        address: address.value,
+        city : city.value,
+        email : email.value,
+      },
+      products : pushIdInCart()
+    };
+
+//     console.log(commandeId);
+
+//   }
+
+
+//     const dataCommande = {contact: responseServeur.contact,
+//       order : responseServeur.orderId,
+//     };
+//     if(commandeProducts == null) {
+//       commandeProducts = [];
+//       commandeProducts.push(dataCommande)
+//       localStorage.setItem(('commande'), JSON.stringify(commandeProducts));
+//     }else if (commandeProducts != null) {
+//       commandeProducts.push(dataCommande);
+//       localStorage.setItem(('commande'), JSON.stringify(commandeProducts));
+//     }
+//     localStorage.removeItem('productItems');
+//     location.href = "confirmation.html";
+//   });
+//   firstName.value = "";
+//   lastName.value = "";
+//   address.value = "";
+//   city.value = "";
+//   email.value = "";
+//   }else {
+//     alert("Veuillez remplir le formulaire correctement");
+//   }
+
+// }
+// }
+
+
+function totalQty() {
+  const totalQty = document.getElementById("totalQuantity");
+  let total = 0;
+  for(let i = 0; i < listCart.length; i++) {
+    total += JSON.parse(listCart[i].quantity)
+    console.log(total);
+  }
+  totalQty.textContent = total;
+};
+totalQty();
 
 //  PRix total
 
-// function totalPrice() {
-//   const totalPrc = document.getElementById('totalPrice');
-//   const total = listCart.reduce((total, productItems) => total += productItems.price * productItems.quantity, 0);
-//   totalPrc.textContent = total;
-// }
+function totalPce() {
+  let total = 0;
+  // GArantie que le numéro est entier
+  // let totalPrice = new Int1.NumberFormat();
+  console.log(listCart);
+  for(let i = 0; i < listCart.length; i++) {
+    fetch(productAPI + listCart[i].id)
+    .then((res) => res.json())
+    .then ((data) => {    
+      let productData = data;   
+      console.log(data);
+      let totalPriceArticle = listCart[i].quantity * `${productData.price}`;
+      total += totalPriceArticle;
+      console.log(total);  
+      document.getElementById('totalPrice').innerText = total;
+    })
+  }
+};
+
+
+const itemQuantity = document.querySelectorAll('.itemQuantity');
+
+// for(itemQty in itemQuantity) {
+// itemQty.addEventListener("input", () => {  
+//   function updatePriceQuantity(id) {
+//     console.log(id);
+//     const updateProductItem = listCart.find((item) => item.id === id);
+//     console.log(updateProductItem);
+//     updateProductItem.quantity = Number(newValue);
+//     totalPce();
+//     totalQty();
+//   };
+// });
+// };
+// updatePriceQuantity(id);
 
 
 // REGEX
 
-// Récupération du formulaire
-let form = document.getElementById('cart__order__form');
 
-form.email.addEventListener('change', () => {
+
+let firstNameId = document.getElementById('firstName')
+
+firstNameId.addEventListener('change', (e) => {
+  validFirstName(e.target.value);
+  console.log(validFirstName(e.target.value));
+});
+
+let lastNameId = document.getElementById('lastName');
+lastNameId.addEventListener('change', (e) => {
+  validLastName(e.target.value);
+});
+
+let addressId = document.getElementById('address');
+addressId.addEventListener('change', (e) => {
+  validAdress(e.target.value);
+});
+
+let cityId = document.getElementById('city');
+cityId.addEventListener('change', (e) => {
+  validCity(e.target.value);
+});
+
+let emailId = document.getElementById('email');
+emailId.addEventListener('change', (e) => {
   //  Valie les éléments que l'utilisateurs est entrain d'écrire
-  validEmail(this);
+  validEmail(e.target.value);
 });
 
-form.firstName.addEventListener('change', () => {
-  validFirstName(this);
-});
 
-form.password.addEventListener('change', () => {
-  validPassword(this);
-});
+
+
+const validFirstName = function(inputFirstName) {
+  let firstNameRegExp = new RegExp ('^[A-Z][A-Za-z\é\è\ê\-]+$');
+  let testFirstName = firstNameRegExp.test(inputFirstName.value);
+
+  let errorFirstName =document.getElementById('firstNameErrorMsg');
+  if(testFirstName == true) {
+    errorFirstName.innerHTML = 'FirstName valide';
+  }else {
+    errorFirstName.innerHTML = 'FirstName non valide';
+  }
+};
+
+const validLastName = function(inputLastName) {
+  let lastNameRegExp = new RegExp ('^[A-Z][A-Za-z\é\è\ê\-]+$');
+  let testLastName = lastNameRegExp.test(inputLastName.value);
+
+  let errorLastName =document.getElementById('lastNameErrorMsg');
+  if(testLastName == true) {
+    errorLastName.innerHTML = 'LastName valide';
+  }else {
+    errorLastName.innerHTML = 'LastName non valide';
+  }
+};
+
+const validAdress = function(inputAdress) {
+  let addressRegExp = new RegExp('([0-9]*) ?([a-zA-Z,\. ]*) ?([0-9]{5}) ?([a-zA-Z]*)');
+  let testAddress = addressRegExp.test(inputAdress.value);
+
+  let errorAddress = document.getElementById('addressErrorMsg');
+  if(testAddress == true) {
+    errorAddress.innerHTML = 'Address valide';
+  }else {
+    errorAddress.innerHTML = 'Address non valide';
+  }
+};
+
+const validCity = function(inputCity) {
+  let CityRegExp = new RegExp('^[a-zA-Z]+(?:(?:\\s+|-)[a-zA-Z]+)*$');
+  let testCity = CityRegExp.test(inputCity.value);
+
+  let errorCity = document.getElementById('cityErrorMsg');
+  if(testCity == true) {
+    errorCity.innerHTML = 'City valide';
+  }else {
+    errorCity.innerHTML = 'City non valide';
+  }
+};
 
 const validEmail = function(inputEmail) {
   // regex : a le droit d'ecrire de a jusqua z, de 0 à 9 etc ...
@@ -183,43 +442,19 @@ const validEmail = function(inputEmail) {
    }
 };
 
-// const validFirstName = function(inputFirstName) {
-
-// };
-
-const validPassword = function(inputPassword) {
-  // Au moins 3 characteres, au moins une majuscule, au moins une minuscule et au moin un chiffre
-  let msg;
-  let valid = false;
-  if(inputPassword.value.length < 3){
-    msg = 'Le mot de passe doit contenir au moins 3 caractères';
-  }
-  else if(!/[A-Z]/.test(inputPassword.value)) {
-    msg = 'Le mot de passe doit contenir au moins une majuscule';
-  }
-  else if(!/[a-z]/.test(inputPassword.value)){
-    msg = 'Le mot de passe doit contenir au moins une minuscule';
-  }
-  else if(!/[0-9]/.test(inputPassword.value)){
-    msg = 'Le mot de passe doit contenir au moins un chiffre';
-  }
-  // Mot de passe valide
-  else{
-    msg = 'Le mot de passe est valide';
-    valid = true;
-  }
-
-  // Affichage
-    //  Récupération de la balise en dessous l'input
-    let errorPassword = inputPassword.nextElementSibling;
-
-    if(valid){
-     errorPassword.innerHTML ='Mot de passe valide';
-     errorPassword.classList.remove('text-danger');
-     errorPassword.classList.add('text-success');
-    }else {
-     errorPassword.innerHTML = msg;
-     errorPassword.classList.remove('text-success');
-     errorPassword.classList.add('text-danger');
-    }
-};
+//     // CHANGER QUANTITE
+//     function changeQuantity(elementQuantity) {
+//         let cart = getCart();
+//         //  Gérer l quantité : find va chercher dans le panir si il y a un produit qui est le même que l'id du produit que je veux ajouter
+//         let foundProduct = basket.find(p => p.id == productId);
+//         if(foundProduct != undefined) {
+//             foundProduct.elementQuantity += elementQuantity;
+//             if(foundProduct.elementQuantity <= 0) {
+//                 removeCart(foundProduct);
+//             }
+//             else{
+//                 saveCart(cart);
+//             }
+//         }
+       
+//     }
