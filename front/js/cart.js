@@ -40,13 +40,32 @@ console.log("test2");
 totalPce();   
 
 // function deleteItemSelect() {  
+
+//   for(let i = 0; i < listCart.length; i++) {
+//     fetch(productAPI + listCart[i].id)
+//     .then((res) => res.json())
+//     .then ((data) => {    
+//       let productData = data; 
+//       console.log(productData);
+//       let productRemove = listCart.length;
+//       console.log(productRemove);
+//       buttonDelete = document.querySelectorAll(".deleteItem");
+//       for(button in buttonDelete) {
+//       button.addEventListener("click", () => {
+//         productRemove.remove();
+//       })
+//     }
+//     });
+//   }
+// }
+
+
+
 //   buttonDelete = document.getElementsByClassName('deleteItem');
 //   for(button in buttonDelete){
-
 //     // on pointe le parent hiérarchique article du lien supprimer
-//     // let remove = buttonDelete.closest(".deleteItem");
-//       button.addEventListener('click', () => {
-//         console.log(remove);
+//     let remove = buttonDelete.closest(".deleteItem");
+//       remove.addEventListener('click', () => {
 //         let totalProductRemove = listCart.length;
 //         console.log(totalProductRemove);
 
@@ -75,15 +94,29 @@ totalPce();
 //   }
 // }
 // const buttonDelete = document.querySelectorAll('.deleteItem');
-// buttonDelete.addEventListener('click', () => {
-//   function deleteItemSelect(productItems) {
+// for(button in buttonDelete){
+//   button.addEventListener('click', () => {
 //     const itemToDelete = listCart.findIndex(
 //       (product) => product.id === productItems.id && product.color === productItems.color)
 //     listCart.splice(itemToDelete, 1)
 //     localStorage.setItem("productItems", JSON.stringify(listCart));
-//   }
-//   deleteItemSelect(productItems);
-// });
+  
+//     const item = document.querySelector(`[data-id="${productItems.id}"][data-color="${productItems.color}"]`);
+//     item.remove();
+//     totalPce()
+//     totalQty()
+//   });
+// }
+// }
+// deleteItemSelect();
+
+
+
+// const divDelete = document.getElementsByClassName("cart__item__content__settings__delete");
+// let sup = document.createElement("p");
+// Object.assign(sup, {className: ".deleteItem", innerText: "Supprimer"});
+
+// document.getElementsByClassName("cart__item__content__settings__delete").appendChild(sup);
 
 
 
@@ -111,6 +144,7 @@ totalPce();
 //     });
 //   }
 // }
+
   
 
 
@@ -122,52 +156,104 @@ totalPce();
       let productData = data;    
       console.log(productData);
       totalPce(); 
-      if (listCart != null){
-
-      let carthtml = document.getElementById("cart__items");
-      console.log(carthtml);
-     
-      carthtml.innerHTML += `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
-      <div class="cart__item__img">
-        <img src="${productData.imageUrl}" alt="Photographie d'un canapé">
-      </div>
-      <div class="cart__item__content">
-        <div class="cart__item__content__description">
-          <h2>${productData.name}</h2>
-          <p>${listCart[i].color}</p>
-          <p>${productData.price}€</p>
+      if (listCart === null || listCart == ""){
+        localStorage.clear();
+      document.querySelector(".cart").innerHTML = "<h1>Votre panier est vide</h1>"
+      }else {
+        let carthtml = document.getElementById("cart__items");
+        console.log(carthtml);
+       
+        carthtml.innerHTML += `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
+        <div class="cart__item__img">
+          <img src="${productData.imageUrl}" alt="Photographie d'un canapé">
         </div>
-        <div class="cart__item__content__settings">
-          <div class="cart__item__content__settings__quantity">
-            <p>${listCart[i].quantity}</p>
-            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100">
+        <div class="cart__item__content">
+          <div class="cart__item__content__description">
+            <h2>${productData.name}</h2>
+            <p>${listCart[i].color}</p>
+            <p>${productData.price}€</p>
           </div>
-          <div class="cart__item__content__settings__delete">
+          <div class="cart__item__content__settings">
+            <div class="cart__item__content__settings__quantity">
+              <p>Qté :</p>
+              <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${listCart[i].quantity}">
+            </div>
+            <div class="cart__item__content__settings__delete">
             <p class="deleteItem">Supprimer</p>
+            </div>
           </div>
         </div>
-      </div>
-    </article>` 
-    // deleteItemSelect(productItems);
+      </article>` 
 
+      // deleteItem(i);
 
-   
+    }
+    //  deleteItemSelect();   
     // const buttonDelete = document.querySelector(`[data-id="${product._id}"][data-color="${product.color}"] .deleteItem`);
     // buttonDelete.addEventListener("click", () => {
 
     //   totalPce();
     //   totalQty();
-    // });
- 
-    }else {
-          const cartNull = document.createElement("h2");
-          cartNull.setAttribute("style", "text-align: center");
-          cartNull.textContent = "Panier vide";
-          carthtml.appendChild(cartNull);
-      }     
-    }  
+    // }); 
+    }     
   )};
 
+// const divDelete = document.getElementsByClassName("cart__item__content__settings__delete");
+// let sup = document.createElement("p");
+// Object.assign(sup, {className: ".deleteItem", innerText: "Supprimer"});
+
+// document.getElementsByClassName("cart__item__content__settings__delete").appendChild(sup);
+
+  // recuperation element parent puis dans le fetch faire boucle for key div delete puis travaille apres
+
+// function deleteItem(item) {
+  
+//   const sup = document.getElementsByClassName('deleteItem');
+//   console.log(sup);
+//   for (const key in sup) {
+//     console.log(sup[key]);
+//     sup[key].addEventListener("click", () => {
+//       console.log("merci");
+//     })
+//   }
+
+  
+//   //   iterator.addEventListener("click", () => {
+//   //   console.log(sup[iterator]);
+//   //   // let index = listCart.indexOf();
+//   // })
+// }
+function deleteItem(i) {
+  const buttonDelete = document.querySelectorAll('.cart__item .deleteItem');
+  console.log(buttonDelete);
+  console.log(buttonDelete[0].closest('.deleteItem'));
+  buttonDelete.forEach((buttonDelete) => {
+  buttonDelete.addEventListener("click", () => {    
+  console.log(buttonDelete.closest('article'));
+  console.log(listCart);
+  buttonDelete.closest('article').remove();
+  listCart.splice(i, 1);
+  localStorage.setItem("productItems", JSON.stringify(listCart));
+  totalQty();
+  totalPce();
+// for(let i = 0; i < listCart.length; i++) {
+//   console.log(listCart[i]);
+// }
+})
+
+})
+}
+
+for(let i = 0; i < listCart.length; i++){
+  fetch(productAPI + listCart[i].id)
+  .then((res) => res.json())
+  .then ((promise) => {
+    console.log(promise);
+    totalQty(i);
+    totalPce(i);
+    deleteItem(i);
+  })
+}
 
               //  RECUPERATION DONNEES FORMULAIRE !!
 
