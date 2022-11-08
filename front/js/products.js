@@ -55,9 +55,9 @@ const fetchProducts = fetch(productAPIId)
                         // AJOUT AU PANIER
 
 let buttonCart = document.getElementById("addToCart");
-let elementColor = document.querySelector("#colors").value;
+let elementColor = document.querySelector("#colors");
     console.log(elementColor);
-let elementQuantity = document.querySelector("#quantity").value;
+let elementQuantity = document.querySelector("#quantity");
      console.log(elementQuantity);
 
 // function addArticleToCart() {
