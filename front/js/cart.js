@@ -1,3 +1,5 @@
+// const { orderProducts } = require("../../back/controllers/product");
+
 // Création variable produits
 let productImg = document.querySelector(".item__img");
 let productTitle = document.getElementById("title");
@@ -7,6 +9,10 @@ let productColor = document.getElementById("colors");
 let productQuantity = document.getElementById("quantity");
 let totalPrice = document.getElementById("totalPrice");
 let totalQuantity = document.getElementById("totalQuantity");
+
+let firstName = "";
+let lastName = "";
+
 
 // Récupération de la chaine de requête depuis l'URL
 const urlId = window.location.search;
@@ -31,6 +37,9 @@ let productItems = {
 
 
 const cart = [];
+let order = {};
+let orderProducts = [];
+let contact = {};
 
 const productAPI = 'http://localhost:3000/api/products/';
 let listCart = JSON.parse(localStorage.getItem('productItems'));
@@ -38,114 +47,6 @@ console.log(listCart);
 console.log("test2");
 
 totalPce();   
-
-// function deleteItemSelect() {  
-
-//   for(let i = 0; i < listCart.length; i++) {
-//     fetch(productAPI + listCart[i].id)
-//     .then((res) => res.json())
-//     .then ((data) => {    
-//       let productData = data; 
-//       console.log(productData);
-//       let productRemove = listCart.length;
-//       console.log(productRemove);
-//       buttonDelete = document.querySelectorAll(".deleteItem");
-//       for(button in buttonDelete) {
-//       button.addEventListener("click", () => {
-//         productRemove.remove();
-//       })
-//     }
-//     });
-//   }
-// }
-
-
-
-//   buttonDelete = document.getElementsByClassName('deleteItem');
-//   for(button in buttonDelete){
-//     // on pointe le parent hiérarchique article du lien supprimer
-//     let remove = buttonDelete.closest(".deleteItem");
-//       remove.addEventListener('click', () => {
-//         let totalProductRemove = listCart.length;
-//         console.log(totalProductRemove);
-
-//         if(totalProductRemove == 1) {
-//           return (
-//             localStorage.removeItem("productItems"),
-//             console.log("removoe panier"),
-//             (location.href = "cart.html")
-//           );
-//         }else {
-//           let someProduct = [];
-//           someProduct = listCart.filter((i) => {
-//             if (
-//               button.productItems.id != listCart[i].id || button.productItems.color != listCart[i].color
-//             ) {
-//               return true;
-//             }
-//           });
-//           console.log(someProduct);
-//           localStorage.setItem("productItems",JSON.stringify(listCart));
-//           totalPce();
-//           totalQty();
-//           location.href = "cart.html";
-//       }
-//     });
-//   }
-// }
-// const buttonDelete = document.querySelectorAll('.deleteItem');
-// for(button in buttonDelete){
-//   button.addEventListener('click', () => {
-//     const itemToDelete = listCart.findIndex(
-//       (product) => product.id === productItems.id && product.color === productItems.color)
-//     listCart.splice(itemToDelete, 1)
-//     localStorage.setItem("productItems", JSON.stringify(listCart));
-  
-//     const item = document.querySelector(`[data-id="${productItems.id}"][data-color="${productItems.color}"]`);
-//     item.remove();
-//     totalPce()
-//     totalQty()
-//   });
-// }
-// }
-// deleteItemSelect();
-
-
-
-// const divDelete = document.getElementsByClassName("cart__item__content__settings__delete");
-// let sup = document.createElement("p");
-// Object.assign(sup, {className: ".deleteItem", innerText: "Supprimer"});
-
-// document.getElementsByClassName("cart__item__content__settings__delete").appendChild(sup);
-
-
-
-
-
-//     for(button in buttonDelete){
-//       console.log(buttonDelete[button]);
-   
-//       // on pointe le parent hiérarchique article du lien supprimer
-//       let remove = buttonDelete[button].closest(".deleteItem");
-//       // console.log(buttonDelete[button]);
-//       // console.log(remove);
-//       remove.addEventListener("click", () => {   
-//           let removeItem = remove.closest("article");
-//           console.log(remove.closest("article"));
-//           removeItem.remove();
-//           console.log(listCart[i]);
-//           listCart.splice(i,1);         
-//           console.log(remove);          
-//           // location.reload();
-//           alert("Ce produit va être supprimé de votre panier");
-//           localStorage.setItem("item",JSON.stringify(listCart));
-//           totalQty();
-//           totalPce();    
-//     });
-//   }
-// }
-
-  
 
 
   for(let i = 0; i < listCart.length; i++)  {
@@ -157,13 +58,13 @@ totalPce();
       console.log(productData);
       totalPce(); 
       if (listCart === null || listCart == ""){
-        localStorage.clear();
+      localStorage.clear();
       document.querySelector(".cart").innerHTML = "<h1>Votre panier est vide</h1>"
       }else {
         let carthtml = document.getElementById("cart__items");
         console.log(carthtml);
        
-        carthtml.innerHTML += `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
+        carthtml.innerHTML += `<article class="cart__item" data-id="${listCart[i].id}" data-color="${listCart[i].color}">
         <div class="cart__item__img">
           <img src="${productData.imageUrl}" alt="Photographie d'un canapé">
         </div>
@@ -183,198 +84,51 @@ totalPce();
             </div>
           </div>
         </div>
-      </article>` 
+        </article>` 
 
-      // deleteItem(i);
+      }
+    })     
+  };
 
-    }
-    //  deleteItemSelect();   
-    // const buttonDelete = document.querySelector(`[data-id="${product._id}"][data-color="${product.color}"] .deleteItem`);
-    // buttonDelete.addEventListener("click", () => {
 
-    //   totalPce();
-    //   totalQty();
-    // }); 
-    }     
-  )};
+function changeQty(i) {        
+  const btnChangeQty = document.querySelectorAll(".cart__item__content__settings__quantity .itemQuantity");
+  console.log(btnChangeQty);
+  btnChangeQty.forEach((item) => {
+    item.addEventListener("change", () => {      
+      console.log(item.closest('article'));
+      let findArticle = item.closest('article');
+      let dataId = findArticle.getAttribute('data-id');
+      let dataColor = findArticle.getAttribute('data-color');    
+        if(listCart[i].id == dataId && listCart[i].color == dataColor) {
+          listCart[i].quantity = item.value;
+        }
+          localStorage.setItem("productItems", JSON.stringify(listCart));
+          // window.location.reload();
+          totalQty();
+          totalPce();
+        // i = listCart.length;
+        })      
+    
+  })
+}
 
-// const divDelete = document.getElementsByClassName("cart__item__content__settings__delete");
-// let sup = document.createElement("p");
-// Object.assign(sup, {className: ".deleteItem", innerText: "Supprimer"});
-
-// document.getElementsByClassName("cart__item__content__settings__delete").appendChild(sup);
-
-  // recuperation element parent puis dans le fetch faire boucle for key div delete puis travaille apres
-
-// function deleteItem(item) {
-  
-//   const sup = document.getElementsByClassName('deleteItem');
-//   console.log(sup);
-//   for (const key in sup) {
-//     console.log(sup[key]);
-//     sup[key].addEventListener("click", () => {
-//       console.log("merci");
-//     })
-//   }
-
-  
-//   //   iterator.addEventListener("click", () => {
-//   //   console.log(sup[iterator]);
-//   //   // let index = listCart.indexOf();
-//   // })
-// }
 function deleteItem(i) {
   const buttonDelete = document.querySelectorAll('.cart__item .deleteItem');
-  console.log(buttonDelete);
-  console.log(buttonDelete[0].closest('.deleteItem'));
   buttonDelete.forEach((buttonDelete) => {
   buttonDelete.addEventListener("click", () => {    
-  console.log(buttonDelete.closest('article'));
-  console.log(listCart);
-  buttonDelete.closest('article').remove();
-  listCart.splice(i, 1);
-  localStorage.setItem("productItems", JSON.stringify(listCart));
-  totalQty();
-  totalPce();
-// for(let i = 0; i < listCart.length; i++) {
-//   console.log(listCart[i]);
-// }
-})
-
+    console.log(buttonDelete.closest('article'));
+    console.log(listCart);
+    buttonDelete.closest('article').remove();
+    listCart.splice(i, 1);
+    localStorage.setItem("productItems", JSON.stringify(listCart));
+    window.location.reload();
+    // localStorage.clear();
+    totalQty();
+    totalPce();
+  })
 })
 }
-
-for(let i = 0; i < listCart.length; i++){
-  fetch(productAPI + listCart[i].id)
-  .then((res) => res.json())
-  .then ((promise) => {
-    console.log(promise);
-    totalQty(i);
-    totalPce(i);
-    deleteItem(i);
-  })
-}
-
-              //  RECUPERATION DONNEES FORMULAIRE !!
-
-let firstName = document.getElementById('firstName');
-let lastName = document.getElementById('lastName');
-let address = document.getElementById('address');
-let city = document.getElementById('city');
-let email = document.getElementById('email');
-let commandeProducts = JSON.parse(localStorage.getItem('commande'));
-console.log(commandeProducts);
-
-let btncommande = document.getElementById('order');
-console.log(btncommande);
-
-btncommande.addEventListener('click', () => {
-  // Récupérer les données du formulaire
-  // Stocker les saisies dans le local storage
-  // let formCart = JSON.parse(localStorage.getItem('allForm'));
-  // console.log(formCart);
-  // formCart.push(allForm);
-  // localStorage.setItem('allForm',JSON.stringify(formCart));  
-  localStorage.setItem("firstName", firstName.value);
-  localStorage.setItem("lastName", lastName.value);
-  localStorage.setItem("address", address.value);
-  localStorage.setItem("city", city.value);
-  localStorage.setItem("email", email.value);
-  location.href = "confirmation.html"; 
-
-  fetch('http://localhost:3000/api/products/order', {
-    method: "POST",
-    headers: {"Content-Type" : "application/json"},
-    body: JSON.stringify( 
-      {contact: {
-      firstName : firstName.value,
-      lastName : lastName.value,
-      address: address.value,
-      city : city.value,
-      email : email.value,
-    },
-    // products: listCart.map(product => product._id)
-  }),
-  })
-  .then((res) => res.json())
-  .then((data) => {
-    let orderId = data.orderId;
-    console.log(responseServeur);
-    // localStorage.clear('cart');
-    window.location.href = "confirmation.html" + "?orderId" + orderId
-    // document.location= `confirmation.html?id=${orderId}`
-
-  }); 
-});
-
-function pushIdInCart() {
-  const id = [];
-  for(let i = 0; i < listCart.length; i++) {
-    id.push(listCart[i].id)
-  }
-  return id;
-}
-
-
-  // Récupération du formulaire
-//   let formulaire = document.getElementsByClassName('cart__order__form');
-//   console.log(formulaire);
-
-// for (const formu of formulaire) {
-//   formu.addEventListener('submit', () => {
-
-//   if (contact != null) {
-//     const commandeFinal = JSON.parse(localStorage.getItem('productItems'));
-//     let commandeId = [];    
-//     console.log(commandeFinal);
-//     console.log(commandeId);
-
-//     commandeFinal.forEach((commande) => {
-//       commandeId.push(commande.id);
-//     });
-
-    const data = {
-      contact: {
-        firstName : firstName.value,
-        lastName : lastName.value,
-        address: address.value,
-        city : city.value,
-        email : email.value,
-      },
-      products : pushIdInCart()
-    };
-
-//     console.log(commandeId);
-
-//   }
-
-
-//     const dataCommande = {contact: responseServeur.contact,
-//       order : responseServeur.orderId,
-//     };
-//     if(commandeProducts == null) {
-//       commandeProducts = [];
-//       commandeProducts.push(dataCommande)
-//       localStorage.setItem(('commande'), JSON.stringify(commandeProducts));
-//     }else if (commandeProducts != null) {
-//       commandeProducts.push(dataCommande);
-//       localStorage.setItem(('commande'), JSON.stringify(commandeProducts));
-//     }
-//     localStorage.removeItem('productItems');
-//     location.href = "confirmation.html";
-//   });
-//   firstName.value = "";
-//   lastName.value = "";
-//   address.value = "";
-//   city.value = "";
-//   email.value = "";
-//   }else {
-//     alert("Veuillez remplir le formulaire correctement");
-//   }
-
-// }
-// }
-
 
 function totalQty() {
   const totalQty = document.getElementById("totalQuantity");
@@ -408,90 +162,188 @@ function totalPce() {
   }
 };
 
+for(let i = 0; i < listCart.length; i++){
+  fetch(productAPI + listCart[i].id)
+  .then((res) => res.json())
+  .then ((promise) => {
+    console.log(promise);
+    changeQty(i);
+    totalQty(i);
+    totalPce(i);
+    deleteItem(i);   
+  })
+}
+
+              //  RECUPERATION DONNEES FORMULAIRE !!
+
+// let firstName = document.getElementById('firstName');
+// let lastName = document.getElementById('lastName');
+// let address = document.getElementById('address');
+// let city = document.getElementById('city');
+// let email = document.getElementById('email');
+// let commandeProducts = JSON.parse(localStorage.getItem('commande'));
+// console.log(commandeProducts);
+
+let btncommande = document.getElementById('order');
+console.log(btncommande);
+
+
+
+
+function pushIdInCart() {
+  const id = [];
+  for(let i = 0; i < listCart.length; i++) {
+    id.push(listCart[i].id)
+  }
+  return id;
+}
+
+
+  // Récupération du formulaire
+//   let formulaire = document.getElementsByClassName('cart__order__form');
+//   console.log(formulaire);
+
+// for (const formu of formulaire) {
+//   formu.addEventListener('submit', () => {
+
+//   if (contact != null) {
+//     const commandeFinal = JSON.parse(localStorage.getItem('productItems'));
+//     let commandeId = [];    
+//     console.log(commandeFinal);
+//     console.log(commandeId);
+
+//     commandeFinal.forEach((commande) => {
+//       commandeId.push(commande.id);
+//     });
+
+
+//     console.log(commandeId);
+
+//   }
+
+
+//     const dataCommande = {contact: responseServeur.contact,
+//       order : responseServeur.orderId,
+//     };
+//     if(commandeProducts == null) {
+//       commandeProducts = [];
+//       commandeProducts.push(dataCommande)
+//       localStorage.setItem(('commande'), JSON.stringify(commandeProducts));
+//     }else if (commandeProducts != null) {
+//       commandeProducts.push(dataCommande);
+//       localStorage.setItem(('commande'), JSON.stringify(commandeProducts));
+//     }
+//     localStorage.removeItem('productItems');
+//     location.href = "confirmation.html";
+//   });
+//   firstName.value = "";
+//   lastName.value = "";
+//   address.value = "";
+//   city.value = "";
+//   email.value = "";
+//   }else {
+//     alert("Veuillez remplir le formulaire correctement");
+//   }
+
+// }
+// }
+
+
+
 
 const itemQuantity = document.querySelectorAll('.itemQuantity');
 
-// for(itemQty in itemQuantity) {
-// itemQty.addEventListener("input", () => {  
-//   function updatePriceQuantity(id) {
-//     console.log(id);
-//     const updateProductItem = listCart.find((item) => item.id === id);
-//     console.log(updateProductItem);
-//     updateProductItem.quantity = Number(newValue);
-//     totalPce();
-//     totalQty();
-//   };
-// });
-// };
-// updatePriceQuantity(id);
-
-
 // REGEX
-
 
 
 let firstNameId = document.getElementById('firstName')
 
 firstNameId.addEventListener('change', (e) => {
-  validFirstName(e.target.value);
-  console.log(validFirstName(e.target.value));
+  firstName = validFirstName(e.target.value);
+  console.log(firstName);
 });
 
 let lastNameId = document.getElementById('lastName');
 lastNameId.addEventListener('change', (e) => {
-  validLastName(e.target.value);
+   lastName = validLastName(e.target.value);
+
 });
 
+let address = "";
 let addressId = document.getElementById('address');
-addressId.addEventListener('change', (e) => {
-  validAdress(e.target.value);
+addressId.addEventListener('change', (e) => {  
+   address = validAdress(e.target.value);
 });
 
+let city = "";
 let cityId = document.getElementById('city');
-cityId.addEventListener('change', (e) => {
-  validCity(e.target.value);
+cityId.addEventListener('change', (e) => { 
+   city =  validCity(e.target.value);
 });
 
+let email = "";
 let emailId = document.getElementById('email');
 emailId.addEventListener('change', (e) => {
   //  Valie les éléments que l'utilisateurs est entrain d'écrire
-  validEmail(e.target.value);
+  
+   email = validEmail(e.target.value);
 });
-
-
+// const contact = {
+//   contact: {
+//     firstName : firstName,
+//     lastName : lastName,
+//     address: address,
+//     city : city,
+//     email : email,
+//   },
+// };
+class Contact {
+  constructor(firstName, lastName, address, city, email) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.address = address;
+    this.city = city;
+    this.email = email;
+  }
+}
 
 
 const validFirstName = function(inputFirstName) {
-  let firstNameRegExp = new RegExp ('^[A-Z][A-Za-z\é\è\ê\-]+$');
+  let firstNameRegExp = new RegExp ('^[a-zA-Z]+(?:(?:\\s+|-)[a-zA-Z]+)*$');
   let testFirstName = firstNameRegExp.test(inputFirstName.value);
 
   let errorFirstName =document.getElementById('firstNameErrorMsg');
   if(testFirstName == true) {
     errorFirstName.innerHTML = 'FirstName valide';
+    console.log(inputFirstName);
+    return (inputFirstName);
   }else {
     errorFirstName.innerHTML = 'FirstName non valide';
   }
 };
 
 const validLastName = function(inputLastName) {
-  let lastNameRegExp = new RegExp ('^[A-Z][A-Za-z\é\è\ê\-]+$');
+  let lastNameRegExp = new RegExp ('^[a-zA-Z]+(?:(?:\\s+|-)[a-zA-Z]+)*$');
   let testLastName = lastNameRegExp.test(inputLastName.value);
 
   let errorLastName =document.getElementById('lastNameErrorMsg');
   if(testLastName == true) {
     errorLastName.innerHTML = 'LastName valide';
+    console.log(inputLastName);
+    return (inputLastName);
   }else {
     errorLastName.innerHTML = 'LastName non valide';
   }
 };
 
 const validAdress = function(inputAdress) {
-  let addressRegExp = new RegExp('([0-9]*) ?([a-zA-Z,\. ]*) ?([0-9]{5}) ?([a-zA-Z]*)');
+  let addressRegExp = new RegExp('^[a-zA-Z]+(?:(?:\\s+|-)[a-zA-Z]+)*$');
   let testAddress = addressRegExp.test(inputAdress.value);
 
   let errorAddress = document.getElementById('addressErrorMsg');
   if(testAddress == true) {
     errorAddress.innerHTML = 'Address valide';
+    return (inputAdress);
   }else {
     errorAddress.innerHTML = 'Address non valide';
   }
@@ -504,6 +356,7 @@ const validCity = function(inputCity) {
   let errorCity = document.getElementById('cityErrorMsg');
   if(testCity == true) {
     errorCity.innerHTML = 'City valide';
+    return (inputCity);
   }else {
     errorCity.innerHTML = 'City non valide';
   }
@@ -511,7 +364,7 @@ const validCity = function(inputCity) {
 
 const validEmail = function(inputEmail) {
   // regex : a le droit d'ecrire de a jusqua z, de 0 à 9 etc ...
-   let emailRegExp = new RegExp ('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2;10}$', 'g');
+   let emailRegExp = new RegExp ('^[a-zA-Z]+(?:(?:\\s+|-)[a-zA-Z]+)*$');
    let testEmail = emailRegExp.test(inputEmail.value);
   //  Récupération de la balise en dessous l'input
   //  let errorEmail = inputEmail.nextElementSibling;
@@ -521,6 +374,7 @@ const validEmail = function(inputEmail) {
     errorEmail.innerHTML ='Adresse valide';
     errorEmail.classList.remove('text-danger');
     errorEmail.classList.add('text-success');
+    return (inputEmail);
    }else {
     errorEmail.innerHTML = 'Adresse non valide';
     errorEmail.classList.remove('text-success');
@@ -528,19 +382,63 @@ const validEmail = function(inputEmail) {
    }
 };
 
-//     // CHANGER QUANTITE
-//     function changeQuantity(elementQuantity) {
-//         let cart = getCart();
-//         //  Gérer l quantité : find va chercher dans le panir si il y a un produit qui est le même que l'id du produit que je veux ajouter
-//         let foundProduct = basket.find(p => p.id == productId);
-//         if(foundProduct != undefined) {
-//             foundProduct.elementQuantity += elementQuantity;
-//             if(foundProduct.elementQuantity <= 0) {
-//                 removeCart(foundProduct);
-//             }
-//             else{
-//                 saveCart(cart);
-//             }
-//         }
-       
-//     }
+
+
+
+
+
+function productsInArray() {
+
+  let products = listCart;
+  for( let product in products) {
+    console.log(products[product].id);
+    product = {
+      id: products[product].id, 
+      quantity: products[product].quantity,
+      color: products[product].color,
+    };
+    console.log(product.id);
+    orderProducts.push(product.id);
+    console.log(orderProducts);
+  }
+}
+
+      // // Récupération de la chaine de requête depuis l'URL
+      // const urlId = window.location.search;
+      // console.log(urlId);
+  
+      // //  Extraction de l'id par la méthode urlSearchParams
+      // const extractionId = new URLSearchParams(urlId);
+      // console.log(extractionId);
+  
+      // const productId = extractionId.get("orderId");
+      // console.log(productId);
+      // let products = [];
+
+btncommande.addEventListener('click', (e) => {
+  productsInArray();
+  contact = new Contact(firstName, lastName, address, city, email);
+  order = {
+    contact, 
+    products: orderProducts,
+  }
+  console.log(contact);
+  console.log(orderProducts);
+  console.log(order);
+  e.preventDefault();
+
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    headers: { Accept: "application/json",
+      "Content-Type" : "application/json"},
+    body: JSON.stringify( 
+      order),
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data.orderId);
+      window.location.href = `./confirmation.html?id=${data.orderId}`;
+      // localStorage.clear('productItems');
+    });
+});
+

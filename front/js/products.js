@@ -65,9 +65,7 @@ let addTocart = document.getElementById("addToCart");
 // console.log(JSON.parse(localStorage["item"]));
 
 addTocart.addEventListener("click", () => { 
-
-    // Si on clique sur le bouton ajouter au panier, on récupère les données
-    
+    // Si on clique sur le bouton ajouter au panier, on récupère les données    
     let listCart = JSON.parse(localStorage.getItem('productItems'));
     let productItems = {
         id : productId,
@@ -75,15 +73,10 @@ addTocart.addEventListener("click", () => {
         quantity : productQuantity.value*1,
         color : productColor.value,
     }
-    console.log(listCart);
-    console.log(productItems);
-
     if(productColor.value == "" || productQuantity.value < 1) {
         alert("Veuillez sélectionner une couleur ainsi qu'une quantité");
-        // document.location.reload();     
-
-    }
-    else {
+        // document.location.reload();   
+    }else {
             // Si listCart (données du tableau récupéré dans le localstorage) est différente de null
             if (listCart !== null) {
                 // Parcourir tout le tableau
@@ -92,44 +85,30 @@ addTocart.addEventListener("click", () => {
                     //  Si mon id et ma couleur sont les mêmes que l'id et la couleur de listCart alors
                     if((productItems.id === listCart[i].id) && (productItems.color === listCart[i].color)){
                          ok += 1;
-                         console.log("ok"+ ok);
                          listCart[i].quantity = parseInt(listCart[i].quantity);
-                         console.log("quantity" + quantity);
                          listCart[i].quantity += productItems.quantity;
                          console.log('mettre a jour la quantité');
                         //  listCart.push(productItems);
                         localStorage.setItem('productItems',JSON.stringify(listCart));
                         alert("L'article a bien été ajouté à votre panier");
                         //  document.location.reload();                      
-                    
-                       
+                                           
                     }
                 }
-                     if (ok === 0) {          
+                    if (ok === 0) {          
                         // Pas même id ni meme couleur  
                         
                         listCart.push(productItems);                      
                         localStorage.setItem('productItems',JSON.stringify(listCart));                       
                         console.log('pas meme id ni meme couleur');       
                         alert("L'article a été ajouté à votre panier");    
-                        // document.location.reload(); 
-                                    
-                        // productItems =  {id:"",quantity:0,color:""}                          
-                     
-                        
-                    }         
-      
-        
-        }
-        else {
+                    }          
+        }else {
                // si on ajoute le premier article on déclare le listCart comme tableau
                console.log('on a pas trouvé des articles dans le localStorage');
                listCart = [];
                listCart.push(productItems);
-               localStorage.setItem('productItems',JSON.stringify(listCart)); 
-            //    break;
-            //    alert("L'article a bien été ajouté à votre panier");  
-            //    document.location.reload();   
+               localStorage.setItem('productItems',JSON.stringify(listCart));   
         }
     
     }
