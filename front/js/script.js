@@ -11,7 +11,7 @@ fetch("http://localhost:3000/api/products")
             // Sélection de la class items (ou doit figurer les articles) plus ajout de la carte products (en commentaire dans HTML)
             document.querySelector(".items").innerHTML +=`<a class="link_products" href="./product.html?id=${products._id}">
                                                             <article>
-                                                            <img src="${products.imageUrl}">
+                                                            <img src="${products.imageUrl}" alt="${products.altTxt}">
                                                             <h3 class="productName">${products.name}</h3>
                                                             <p class="productDescription">${products.description}</p>
                                                             </article>

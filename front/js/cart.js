@@ -1,5 +1,3 @@
-// const { orderProducts } = require("../../back/controllers/product");
-
 // Création variable produits
 let productImg = document.querySelector(".item__img");
 let productTitle = document.getElementById("title");
@@ -25,9 +23,6 @@ console.log(extractionId);
 const productId = extractionId.get("id");
 console.log(productId);
 
-// let productAPI = "http://localhost:3000/api/products/";
-// let listCart = JSON.parse(localStorage.getItem('productItems'));
-
 let productItems = {
   id : productId,
   // Multiplie par 1 pour que la valeur de quantité ne sont plus string mais number
@@ -46,9 +41,9 @@ let listCart = JSON.parse(localStorage.getItem('productItems'));
 console.log(listCart);
 console.log("test2");
 
-totalPce();   
+// totalPce();   
 
-
+//  Affichage des produits du panier
   for(let i = 0; i < listCart.length; i++)  {
     fetch(productAPI + listCart[i].id)
     .then((res) => res.json())
@@ -66,7 +61,7 @@ totalPce();
        
         carthtml.innerHTML += `<article class="cart__item" data-id="${listCart[i].id}" data-color="${listCart[i].color}">
         <div class="cart__item__img">
-          <img src="${productData.imageUrl}" alt="Photographie d'un canapé">
+          <img src="${productData.imageUrl}" alt="alt="${productData.altTxt}">
         </div>
         <div class="cart__item__content">
           <div class="cart__item__content__description">
@@ -90,7 +85,7 @@ totalPce();
     })     
   };
 
-
+// Fonction qui permet de modifier la quantité dans le panier
 function changeQty(i) {        
   const btnChangeQty = document.querySelectorAll(".cart__item__content__settings__quantity .itemQuantity");
   console.log(btnChangeQty);
@@ -104,15 +99,14 @@ function changeQty(i) {
           listCart[i].quantity = item.value;
         }
           localStorage.setItem("productItems", JSON.stringify(listCart));
-          // window.location.reload();
           totalQty();
           totalPce();
-        // i = listCart.length;
         })      
     
   })
 }
 
+// Fonction qui permet de supprimer un produit
 function deleteItem(i) {
   const buttonDelete = document.querySelectorAll('.cart__item .deleteItem');
   buttonDelete.forEach((buttonDelete) => {
@@ -123,13 +117,13 @@ function deleteItem(i) {
     listCart.splice(i, 1);
     localStorage.setItem("productItems", JSON.stringify(listCart));
     window.location.reload();
-    // localStorage.clear();
     totalQty();
     totalPce();
   })
 })
 }
 
+//  Fonction qui permet de calculer et d'afficher la quantité totale
 function totalQty() {
   const totalQty = document.getElementById("totalQuantity");
   let total = 0;
@@ -141,12 +135,10 @@ function totalQty() {
 };
 totalQty();
 
-//  PRix total
-
+// Fonction qui permet de calculer et afficher le prix total
 function totalPce() {
   let total = 0;
   // GArantie que le numéro est entier
-  // let totalPrice = new Int1.NumberFormat();
   console.log(listCart);
   for(let i = 0; i < listCart.length; i++) {
     fetch(productAPI + listCart[i].id)
@@ -162,6 +154,7 @@ function totalPce() {
   }
 };
 
+//  Boucle et fetch pour appeler mes fonctions
 for(let i = 0; i < listCart.length; i++){
   fetch(productAPI + listCart[i].id)
   .then((res) => res.json())
@@ -176,80 +169,9 @@ for(let i = 0; i < listCart.length; i++){
 
               //  RECUPERATION DONNEES FORMULAIRE !!
 
-// let firstName = document.getElementById('firstName');
-// let lastName = document.getElementById('lastName');
-// let address = document.getElementById('address');
-// let city = document.getElementById('city');
-// let email = document.getElementById('email');
-// let commandeProducts = JSON.parse(localStorage.getItem('commande'));
-// console.log(commandeProducts);
 
 let btncommande = document.getElementById('order');
 console.log(btncommande);
-
-
-
-
-function pushIdInCart() {
-  const id = [];
-  for(let i = 0; i < listCart.length; i++) {
-    id.push(listCart[i].id)
-  }
-  return id;
-}
-
-
-  // Récupération du formulaire
-//   let formulaire = document.getElementsByClassName('cart__order__form');
-//   console.log(formulaire);
-
-// for (const formu of formulaire) {
-//   formu.addEventListener('submit', () => {
-
-//   if (contact != null) {
-//     const commandeFinal = JSON.parse(localStorage.getItem('productItems'));
-//     let commandeId = [];    
-//     console.log(commandeFinal);
-//     console.log(commandeId);
-
-//     commandeFinal.forEach((commande) => {
-//       commandeId.push(commande.id);
-//     });
-
-
-//     console.log(commandeId);
-
-//   }
-
-
-//     const dataCommande = {contact: responseServeur.contact,
-//       order : responseServeur.orderId,
-//     };
-//     if(commandeProducts == null) {
-//       commandeProducts = [];
-//       commandeProducts.push(dataCommande)
-//       localStorage.setItem(('commande'), JSON.stringify(commandeProducts));
-//     }else if (commandeProducts != null) {
-//       commandeProducts.push(dataCommande);
-//       localStorage.setItem(('commande'), JSON.stringify(commandeProducts));
-//     }
-//     localStorage.removeItem('productItems');
-//     location.href = "confirmation.html";
-//   });
-//   firstName.value = "";
-//   lastName.value = "";
-//   address.value = "";
-//   city.value = "";
-//   email.value = "";
-//   }else {
-//     alert("Veuillez remplir le formulaire correctement");
-//   }
-
-// }
-// }
-
-
-
 
 const itemQuantity = document.querySelectorAll('.itemQuantity');
 
@@ -288,15 +210,7 @@ emailId.addEventListener('change', (e) => {
   
    email = validEmail(e.target.value);
 });
-// const contact = {
-//   contact: {
-//     firstName : firstName,
-//     lastName : lastName,
-//     address: address,
-//     city : city,
-//     email : email,
-//   },
-// };
+
 class Contact {
   constructor(firstName, lastName, address, city, email) {
     this.firstName = firstName;
@@ -382,13 +296,8 @@ const validEmail = function(inputEmail) {
    }
 };
 
-
-
-
-
-
+//  Création de l'objet product
 function productsInArray() {
-
   let products = listCart;
   for( let product in products) {
     console.log(products[product].id);
@@ -403,18 +312,7 @@ function productsInArray() {
   }
 }
 
-      // // Récupération de la chaine de requête depuis l'URL
-      // const urlId = window.location.search;
-      // console.log(urlId);
-  
-      // //  Extraction de l'id par la méthode urlSearchParams
-      // const extractionId = new URLSearchParams(urlId);
-      // console.log(extractionId);
-  
-      // const productId = extractionId.get("orderId");
-      // console.log(productId);
-      // let products = [];
-
+//  méthode post
 btncommande.addEventListener('click', (e) => {
   productsInArray();
   contact = new Contact(firstName, lastName, address, city, email);
@@ -438,7 +336,6 @@ btncommande.addEventListener('click', (e) => {
     .then(data => {
       console.log(data.orderId);
       window.location.href = `./confirmation.html?id=${data.orderId}`;
-      // localStorage.clear('productItems');
     });
 });
 
